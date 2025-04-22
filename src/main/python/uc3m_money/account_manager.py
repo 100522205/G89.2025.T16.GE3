@@ -12,6 +12,8 @@ from uc3m_money.attributes.attribute_transfer_type import TransferType
 from uc3m_money.attributes.attribute_transfer_amount import TransferAmount
 from uc3m_money.attributes.attribute_deposit_amount import DepositAmount
 
+from uc3m_money.storage.transfer_request_json_store import TransferRequestJsonStore
+
 
 class AccountManager:
     """Class for providing the methods for managing the orders"""
@@ -41,7 +43,9 @@ class AccountManager:
                                      transfer_date=date,
                                      transfer_amount=amount)
 
-        JsonStore.save_transfer_request(my_request)
+        all_transfers = TransferRequestJsonStore()
+        all_transfers.add_item(my_request)
+        return my_request.transfer_code
 
         return my_request.transfer_code
 

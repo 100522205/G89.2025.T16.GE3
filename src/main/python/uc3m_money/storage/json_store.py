@@ -7,31 +7,42 @@ from uc3m_money.account_management_exception import AccountManagementException
 
 class JsonStore:
 
+    _data_list = []
+    _file_name = ""
 
-    def save_transfer_request(my_request):
+    def __init__(self):
+        self._data_list = []
+        self._file_name = ""
+
+
+    def save_list_to_file(self):
         try:
-            with open(TRANSFERS_STORE_FILE, "r", encoding="utf-8", newline="") as file:
-                transfer_load = json.load(file)
-        except FileNotFoundError:
-            transfer_load = []
-        except json.JSONDecodeError as exception:
-            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from exception
-        for transfer_instance in transfer_load:
-            if (transfer_instance["from_iban"] == my_request.from_iban and
-                    transfer_instance["to_iban"] == my_request.to_iban and
-                    transfer_instance["transfer_date"] == my_request.transfer_date and
-                    transfer_instance["transfer_amount"] == my_request.transfer_amount and
-                    transfer_instance["transfer_concept"] == my_request.transfer_concept and
-                    transfer_instance["transfer_type"] == my_request.transfer_type):
-                raise AccountManagementException("Duplicated transfer in transfer list")
-        transfer_load.append(my_request.to_json())
-        try:
-            with open(TRANSFERS_STORE_FILE, "w", encoding="utf-8", newline="") as file:
-                json.dump(transfer_load, file, indent=2)
+            with open(self._file_name, "w", encoding="utf-8", newline="") as file:
+                json.dump(self._data_list, file, indent=2)
         except FileNotFoundError as exception:
             raise AccountManagementException("Wrong file  or file path") from exception
         except json.JSONDecodeError as exception:
             raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from exception
+
+
+    def load_list_from_file(self):
+        try:
+            with open(self._file_name, "r", encoding="utf-8", newline="") as file:
+                self._data_list = json.load(file)
+        except FileNotFoundError:
+            self._data_list = []
+        except json.JSONDecodeError as exception:
+            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from exception
+
+
+    def add_item(self, item):
+        self._data_list.append(item.to_json())
+
+
+    def find_item(self, key, value):
+        for instance in self._data_list:
+            if self._data_list[key] == value:
+                return True
 
 
     def save_deposit(deposit_obj):
