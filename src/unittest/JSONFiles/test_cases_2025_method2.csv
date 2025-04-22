@@ -1,5 +1,5 @@
 VALID_INVALID,ID_TEST,FILE,RESULT
-VALID,RF2_TEST__1,case_ok.json,eab200202273da17d8c3069469975a1f55b056b12542ace052b695cc1d7f6a97
+VALID,RF2_TEST__1,case_ok.json,87dd8c743c41b8df7edc084ff337c37f2168316c75be473667aa507b3e4eeb1a
 INVALID,RF2_TEST__2,key_del_label2.json,Error - Invalid Key in JSON
 INVALID,RF2_TEST__3,ko_del_amount.json,Error - Invalid deposit amount
 INVALID,RF2_TEST__4,ko_del_cents.json,Error - Invalid deposit amount
