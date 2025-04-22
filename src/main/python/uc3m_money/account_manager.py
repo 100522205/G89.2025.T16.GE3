@@ -1,8 +1,6 @@
 """Account manager module """
-import json
 from datetime import datetime, timezone
 from uc3m_money.account_management_exception import AccountManagementException
-from uc3m_money.account_management_config import (TRANSACTIONS_STORE_FILE)
 from uc3m_money.storage.json_store import JsonStore
 
 from uc3m_money.transfer_request import TransferRequest
@@ -49,21 +47,7 @@ class AccountManager:
 
     def deposit_into_account(self, input_file:str)->str:
         """manages the deposits received for accounts"""
-        try:
-            with open(input_file, "r", encoding="utf-8", newline="") as file:
-                input_deposit = json.load(file)
-        except FileNotFoundError as exception:
-            raise AccountManagementException("Error: file input not found") from exception
-        except json.JSONDecodeError as exception:
-            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from exception
-
-        # comprobar valores del fichero
-        try:
-            deposit_iban = input_deposit["IBAN"]
-            deposit_amount = input_deposit["AMOUNT"]
-        except KeyError as exception:
-            raise AccountManagementException("Error - Invalid Key in JSON") from exception
-
+        deposit_amount, deposit_iban = JsonStore.load_deposit(input_file)
 
         Iban(deposit_iban)
         DepositAmount(deposit_amount)
@@ -75,23 +59,10 @@ class AccountManager:
 
         return deposit_obj.deposit_signature
 
-    def read_transactions_file(self):
-        """loads the content of the transactions file
-        and returns a list"""
-        try:
-            with open(TRANSACTIONS_STORE_FILE, "r", encoding="utf-8", newline="") as file:
-                input_list = json.load(file)
-        except FileNotFoundError as exception:
-            raise AccountManagementException("Wrong file  or file path") from exception
-        except json.JSONDecodeError as exception:
-            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from exception
-        return input_list
-
-
     def calculate_balance(self, iban:str)->bool:
         """calculate the balance for a given iban"""
         Iban(iban)
-        transfer_load = self.read_transactions_file()
+        transfer_load = JsonStore.read_transactions_file()
         iban_found = False
         balance_sum = 0
         for transaction in transfer_load:

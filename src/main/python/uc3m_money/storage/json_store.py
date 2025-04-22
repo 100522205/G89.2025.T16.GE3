@@ -1,6 +1,7 @@
 import json
 
-from uc3m_money.account_management_config import TRANSFERS_STORE_FILE,DEPOSITS_STORE_FILE,BALANCES_STORE_FILE
+from uc3m_money.account_management_config import (TRANSFERS_STORE_FILE,DEPOSITS_STORE_FILE,BALANCES_STORE_FILE,
+                                                  TRANSACTIONS_STORE_FILE)
 from uc3m_money.account_management_exception import AccountManagementException
 
 
@@ -65,3 +66,33 @@ class JsonStore:
                 json.dump(balance_list, file, indent=2)
         except FileNotFoundError as exception:
             raise AccountManagementException("Wrong file  or file path") from exception
+
+
+    def load_deposit(input_file):
+        try:
+            with open(input_file, "r", encoding="utf-8", newline="") as file:
+                input_deposit = json.load(file)
+        except FileNotFoundError as exception:
+            raise AccountManagementException("Error: file input not found") from exception
+        except json.JSONDecodeError as exception:
+            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from exception
+        # comprobar valores del fichero
+        try:
+            deposit_iban = input_deposit["IBAN"]
+            deposit_amount = input_deposit["AMOUNT"]
+        except KeyError as exception:
+            raise AccountManagementException("Error - Invalid Key in JSON") from exception
+        return deposit_amount, deposit_iban
+
+    @staticmethod
+    def read_transactions_file():
+        """loads the content of the transactions file
+        and returns a list"""
+        try:
+            with open(TRANSACTIONS_STORE_FILE, "r", encoding="utf-8", newline="") as file:
+                input_list = json.load(file)
+        except FileNotFoundError as exception:
+            raise AccountManagementException("Wrong file  or file path") from exception
+        except json.JSONDecodeError as exception:
+            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from exception
+        return input_list
