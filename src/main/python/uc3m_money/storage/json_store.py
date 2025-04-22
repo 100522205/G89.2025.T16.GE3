@@ -36,7 +36,7 @@ class JsonStore:
 
 
     def add_item(self, item):
-        self._data_list.append(item.to_json())
+        self._data_list.append(item)
 
 
     def find_item(self, key, value):
