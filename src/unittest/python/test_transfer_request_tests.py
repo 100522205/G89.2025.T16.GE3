@@ -28,10 +28,10 @@ class TestTransferRequestTest(TestCase):
         try:
             with open(my_file, "r", encoding="utf-8", newline="") as file:
                 data = json.load(file)
-        except FileNotFoundError as ex:
-            raise AccountManagementException("Wrong file or file path") from ex
-        except json.JSONDecodeError as ex:
-            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from ex
+        except FileNotFoundError as exception:
+            raise AccountManagementException("Wrong file or file path") from exception
+        except json.JSONDecodeError as exception:
+            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from exception
         return data
 
     #pylint: disable=too-many-locals
@@ -41,7 +41,7 @@ class TestTransferRequestTest(TestCase):
         my_cases = JSON_FILES_PATH + "test_cases_2025_method1.csv"
         with open(my_cases, newline='', encoding='utf-8') as csvfile:
             param_test_cases = csv.DictReader(csvfile, delimiter=';')
-            mngr = AccountManager()
+            manager = AccountManager()
             for row in param_test_cases:
                 test_id = row['ID_TEST']
                 iban_from = row["From_iban"]
@@ -60,13 +60,13 @@ class TestTransferRequestTest(TestCase):
 
                 if valid == "VALID":
                     with self.subTest(test_id + valid):
-                        valor = mngr.transfer_request(from_iban=iban_from,
+                        value = manager.transfer_request(from_iban=iban_from,
                                                       to_iban=iban_to,
                                                       transfer_type=transfer_type,
                                                       amount=number_amount,
                                                       date=transfer_date,
                                                       concept=transfer_concept)
-                        self.assertEqual(result, valor)
+                        self.assertEqual(result, value)
                         # Check if this DNI is store in storeRequest.json
                         my_data = self.read_file()
                         my_request = TransferRequest(from_iban=iban_from,
@@ -76,12 +76,12 @@ class TestTransferRequestTest(TestCase):
                                                      transfer_amount=number_amount,
                                                      transfer_type=transfer_type)
                         found = False
-                        for k in my_data:
-                            if k["transfer_code"] == valor:
+                        for transference in my_data:
+                            if transference["transfer_code"] == value:
                                 found = True
                                 # this assert give me more information
                                 # about the differences than assertEqual
-                                self.assertDictEqual(k, my_request.to_json())
+                                self.assertDictEqual(transference, my_request.to_json())
                         # if found is False , this assert fails
                         self.assertTrue(found)
                 else:
@@ -94,14 +94,14 @@ class TestTransferRequestTest(TestCase):
                                 hash_original = hashlib.md5(str(file_org).encode()).hexdigest()
                         else:
                             hash_original = ""
-                        with self.assertRaises(AccountManagementException) as c_m:
-                            valor = mngr.transfer_request(from_iban=iban_from,
+                        with self.assertRaises(AccountManagementException) as context:
+                            value = manager.transfer_request(from_iban=iban_from,
                                                           to_iban=iban_to,
                                                           transfer_type=transfer_type,
                                                           amount=number_amount,
                                                           date=transfer_date,
                                                           concept=transfer_concept)
-                        self.assertEqual(c_m.exception.message, result)
+                        self.assertEqual(context.exception.message, result)
 
                         # now we check that the signature of the file is the same
                         # (the file didn't change)
@@ -123,8 +123,8 @@ class TestTransferRequestTest(TestCase):
         transfer_amount = 10.0
         transfer_date = "22/03/2025"
         transfer_concept = "Testing duplicated transfers"
-        mngr  = AccountManager()
-        mngr.transfer_request(from_iban=iban_from,
+        manager  = AccountManager()
+        manager.transfer_request(from_iban=iban_from,
                               to_iban=iban_to,
                               transfer_type=transfer_type,
                               amount=transfer_amount,
@@ -136,14 +136,14 @@ class TestTransferRequestTest(TestCase):
                 hash_original = hashlib.md5(str(file_org).encode()).hexdigest()
         else:
             hash_original = ""
-        with self.assertRaises(AccountManagementException) as c_m:
-            mngr.transfer_request(from_iban=iban_from,
+        with self.assertRaises(AccountManagementException) as context:
+            manager.transfer_request(from_iban=iban_from,
                                   to_iban=iban_to,
                                   transfer_type=transfer_type,
                                   amount=transfer_amount,
                                   date=transfer_date,
                                   concept=transfer_concept)
-        self.assertEqual(c_m.exception.message, "Duplicated transfer in transfer list")
+        self.assertEqual(context.exception.message, "Duplicated transfer in transfer list")
 
         # now we check that the signature of the file is the same
         # (the file didn't change)
@@ -164,14 +164,14 @@ class TestTransferRequestTest(TestCase):
         transfer_amount = 10.0
         transfer_date = "22/03/2025"
         transfer_concept = "Testing duplicated transfers"
-        mngr  = AccountManager()
-        res = mngr.transfer_request(from_iban=iban_from,
+        manager  = AccountManager()
+        result = manager.transfer_request(from_iban=iban_from,
                                     to_iban=iban_to,
                                     transfer_type=transfer_type,
                                     amount=transfer_amount,
                                     date=transfer_date,
                                     concept=transfer_concept)
-        self.assertEqual("c5477f9dcde7275021eab0bd58bb8175",res)
+        self.assertEqual("c5477f9dcde7275021eab0bd58bb8175",result)
         my_data = self.read_file()
         my_request = TransferRequest(from_iban=iban_from,
                                      to_iban=iban_to,
@@ -180,12 +180,12 @@ class TestTransferRequestTest(TestCase):
                                      transfer_amount=transfer_amount,
                                      transfer_type=transfer_type)
         found = False
-        for k in my_data:
-            if k["transfer_code"] == res:
+        for transference in my_data:
+            if transference["transfer_code"] == result:
                 found = True
                 # this assert give me more information
                 # about the differences than assertEqual
-                self.assertDictEqual(k, my_request.to_json())
+                self.assertDictEqual(transference, my_request.to_json())
         # if found is False , this assert fails
         self.assertTrue(found)
 
@@ -198,14 +198,14 @@ class TestTransferRequestTest(TestCase):
             transfer_amount = 10.0
             transfer_date = "23/03/2025"
             transfer_concept = "Testing duplicated transfers"
-            mngr = AccountManager()
-            res = mngr.transfer_request(from_iban=iban_from,
+            manager = AccountManager()
+            result = manager.transfer_request(from_iban=iban_from,
                                         to_iban=iban_to,
                                         transfer_type=transfer_type,
                                         amount=transfer_amount,
                                         date=transfer_date,
                                         concept=transfer_concept)
-            self.assertEqual("b04ac19f692944771fc66c97b1072757", res)
+            self.assertEqual("b04ac19f692944771fc66c97b1072757", result)
             my_data = self.read_file()
             my_request = TransferRequest(from_iban=iban_from,
                                          to_iban=iban_to,
@@ -214,12 +214,12 @@ class TestTransferRequestTest(TestCase):
                                          transfer_amount=transfer_amount,
                                          transfer_type=transfer_type)
             found = False
-            for k in my_data:
-                if k["transfer_code"] == res:
+            for transference in my_data:
+                if transference["transfer_code"] == result:
                     found = True
                     # this assert give me more information
                     # about the differences than assertEqual
-                    self.assertDictEqual(k, my_request.to_json())
+                    self.assertDictEqual(transference, my_request.to_json())
             # if found is False , this assert fails
             self.assertTrue(found)
 
@@ -233,20 +233,20 @@ class TestTransferRequestTest(TestCase):
         transfer_amount = 10.0
         transfer_date = "25/03/2025"
         transfer_concept = "Testing yesterday"
-        mngr  = AccountManager()
+        manager  = AccountManager()
         if os.path.isfile(TRANSFERS_STORE_FILE):
             with open(TRANSFERS_STORE_FILE, "r", encoding="utf-8", newline="") as file_org:
                 hash_original = hashlib.md5(str(file_org).encode()).hexdigest()
         else:
             hash_original = ""
-        with self.assertRaises(AccountManagementException) as c_m:
-            mngr.transfer_request(from_iban=iban_from,
+        with self.assertRaises(AccountManagementException) as context:
+            manager.transfer_request(from_iban=iban_from,
                                   to_iban=iban_to,
                                   transfer_type=transfer_type,
                                   amount=transfer_amount,
                                   date=transfer_date,
                                   concept=transfer_concept)
-        self.assertEqual(c_m.exception.message, "Transfer date must be today or later.")
+        self.assertEqual(context.exception.message, "Transfer date must be today or later.")
 
         # now we check that the signature of the file is the same
         # (the file didn't change)

@@ -25,10 +25,10 @@ class TestDepositIntoAccountTests(TestCase):
         try:
             with open(DEPOSITS_STORE_FILE, "r", encoding="utf-8", newline="") as file:
                 data = json.load(file)
-        except FileNotFoundError as ex:
-            raise AccountManagementException("Wrong file or file path") from ex
-        except json.JSONDecodeError as ex:
-            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from ex
+        except FileNotFoundError as exception:
+            raise AccountManagementException("Wrong file or file path") from exception
+        except json.JSONDecodeError as exception:
+            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from exception
         return data
 
     @freeze_time("2025/03/26 14:00:00")
@@ -39,7 +39,7 @@ class TestDepositIntoAccountTests(TestCase):
         my_cases = JSON_FILES_PATH + "test_cases_2025_method2.csv"
         with open(my_cases, newline='', encoding='utf-8') as csvfile:
             param_test_cases = csv.DictReader(csvfile, delimiter=',')
-            mngr = AccountManager()
+            manager = AccountManager()
             for row in param_test_cases:
                 # VALID INVALID;ID TEST;FILE;EXPECTED RESULT
                 test_id = row['ID_TEST']
@@ -50,14 +50,14 @@ class TestDepositIntoAccountTests(TestCase):
                     with self.subTest(test_id + valid):
                         # removes all the deposits to be sure that the method works
                         self.setUp()
-                        valor = mngr.deposit_into_account(test_file)
-                        self.assertEqual(result, valor)
+                        value = manager.deposit_into_account(test_file)
+                        self.assertEqual(result, value)
                         # Check if this deposit has been stored
 
                         my_data = self.read_file()
                         found = False
-                        for k in my_data:
-                            if k["deposit_signature"] == valor:
+                        for deposit in my_data:
+                            if deposit["deposit_signature"] == value:
                                 found = True
                         # if found is False , this assert fails
                         self.assertTrue(found)
@@ -71,9 +71,9 @@ class TestDepositIntoAccountTests(TestCase):
                         else:
                             hash_original = ""
 
-                        with self.assertRaises(AccountManagementException) as c_m:
-                            valor = mngr.deposit_into_account(test_file)
-                        self.assertEqual(c_m.exception.message, result)
+                        with self.assertRaises(AccountManagementException) as context:
+                            value = manager.deposit_into_account(test_file)
+                        self.assertEqual(context.exception.message, result)
                         if os.path.isfile(DEPOSITS_STORE_FILE):
                             with open(DEPOSITS_STORE_FILE, "r",
                                       encoding="utf-8", newline="") as file:
