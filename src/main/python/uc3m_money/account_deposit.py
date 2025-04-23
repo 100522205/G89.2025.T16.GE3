@@ -1,6 +1,8 @@
 """Contains the class OrderShipping"""
 from datetime import datetime, timezone
 import hashlib
+from uc3m_money.account_management_exception import AccountManagementException
+from uc3m_money.storage.input_deposit_json_store import InputDepositJsonStore
 
 class AccountDeposit():
     """Class representing the information required for shipping of an order"""
@@ -60,3 +62,16 @@ class AccountDeposit():
     def deposit_signature( self ):
         """Returns the sha256 signature of the date"""
         return hashlib.sha256(self.__signature_string().encode()).hexdigest()
+
+    @classmethod
+    def create_new_deposit_from_file(cls, input_file):
+        new_deposit = InputDepositJsonStore(input_file)
+        input_deposit = new_deposit.load_list_from_file(fnf_error=True)
+        try:
+            deposit_iban = input_deposit["IBAN"]
+            deposit_amount = input_deposit["AMOUNT"]
+        except KeyError as e:
+            raise AccountManagementException("Error - Invalid Key in JSON") from e
+
+        deposit_obj = cls(to_iban=deposit_iban, deposit_amount=deposit_amount)
+        return deposit_obj

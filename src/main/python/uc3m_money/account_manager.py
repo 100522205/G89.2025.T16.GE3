@@ -51,17 +51,14 @@ class AccountManager:
 
     def deposit_into_account(self, input_file:str)->str:
         """manages the deposits received for accounts"""
-        deposit_amount, deposit_iban = JsonStore.load_deposit(input_file)
+        deposit_obj = AccountDeposit.create_new_deposit_from_file(input_file)
 
-        Iban(deposit_iban)
-        DepositAmount(deposit_amount)
-
-        deposit_obj = AccountDeposit(to_iban=deposit_iban,
-                                     deposit_amount=deposit_amount)
+        Iban(deposit_obj.to_iban)
+        DepositAmount(deposit_obj.deposit_amount)
 
         JsonStore.save_deposit(deposit_obj)
-
         return deposit_obj.deposit_signature
+
 
     def calculate_balance(self, iban:str)->bool:
         """calculate the balance for a given iban"""
