@@ -43,8 +43,9 @@ class AccountManager:
                                      transfer_date=date,
                                      transfer_amount=amount)
 
-        all_transfers = TransferRequestJsonStore()
-        all_transfers.save_transfer_request(my_request)
+        at = TransferRequestJsonStore()
+        at.save_transfer_request(my_request)
+
         return my_request.transfer_code
 
     def deposit_into_account(self, input_file:str)->str:
