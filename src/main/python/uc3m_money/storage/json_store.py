@@ -46,7 +46,7 @@ class JsonStore:
 
     def find_item(self, key, value):
         for instance in self._data_list:
-            if self._data_list[key] == value:
+            if instance[key] == value:
                 return True
 
 
