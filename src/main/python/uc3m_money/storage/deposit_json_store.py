@@ -6,3 +6,7 @@ class DepositJsonStore(JsonStore):
         super().__init__()
         self._file_name = DEPOSITS_STORE_FILE
         self.load_list_from_file(fnf_error=False)
+
+    def store_deposit(self, deposit_obj):
+        self.add_item(deposit_obj)
+        self.save_list_to_file()

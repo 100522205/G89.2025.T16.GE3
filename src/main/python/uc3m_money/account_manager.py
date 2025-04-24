@@ -2,10 +2,12 @@
 from datetime import datetime, timezone
 from uc3m_money.account_management_exception import AccountManagementException
 from uc3m_money.storage.deposit_json_store import DepositJsonStore
+from uc3m_money.storage.account_balance_json_store import AccountBalanceJsonStore
 from uc3m_money.storage.json_store import JsonStore
 
 from uc3m_money.transfer_request import TransferRequest
 from uc3m_money.account_deposit import AccountDeposit
+from uc3m_money.account_balance import AccountBalance
 from uc3m_money.attributes.attribute_iban import Iban
 from uc3m_money.attributes.attribute_concept import Concept
 from uc3m_money.attributes.attribute_transfer_date import TransferDate
@@ -58,29 +60,16 @@ class AccountManager:
         #Check if amount is correct
         DepositAmount(deposit_obj.deposit_amount)
         #Add the deposit to the json file
-        deposit_store = DepositJsonStore()
-        deposit_store.add_item(deposit_obj)
-        deposit_store.save_list_to_file()
+        DepositJsonStore().store_deposit(deposit_obj)
         #Return the deposit signature
         return deposit_obj.deposit_signature
 
     def calculate_balance(self, iban:str)->bool:
         """calculate the balance for a given iban"""
-        Iban(iban)
-        transfer_load = JsonStore.read_transactions_file()
-        iban_found = False
-        balance_sum = 0
-        for transaction in transfer_load:
-            #print(transaction["IBAN"] + " - " + iban)
-            if transaction["IBAN"] == iban:
-                balance_sum += float(transaction["amount"])
-                iban_found = True
-        if not iban_found:
-            raise AccountManagementException("IBAN not found")
+        balance_obj = AccountBalance.create_from_transactions(iban)
 
-        last_balance = {"IBAN": iban,
-                        "time": datetime.timestamp(datetime.now(timezone.utc)),
-                        "BALANCE": balance_sum}
+        store = AccountBalanceJsonStore()
+        store._data_list.append(balance_obj.to_json())
+        store.save_list_to_file()
 
-        JsonStore.save_balance(last_balance)
         return True
