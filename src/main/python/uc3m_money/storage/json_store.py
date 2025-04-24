@@ -1,8 +1,6 @@
 "JSON superclass to avoid divergent code in account_manager"
 import json
 
-from uc3m_money.account_management_config import (DEPOSITS_STORE_FILE,BALANCES_STORE_FILE,
-                                                  TRANSACTIONS_STORE_FILE)
 from uc3m_money.account_management_exception import AccountManagementException
 
 
@@ -25,7 +23,6 @@ class JsonStore:
         except json.JSONDecodeError as exception:
             raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from exception
 
-
     def load_list_from_file(self, fnf_error):
         """general method of loading a JSON"""
         try:
@@ -42,7 +39,6 @@ class JsonStore:
     def add_item(self, item):
         """general method of adding new data to a data tuple"""
         self._data_list.append(item.to_json())
-
 
     def find_item(self, key, value):
         """general method for checking duplicates"""
