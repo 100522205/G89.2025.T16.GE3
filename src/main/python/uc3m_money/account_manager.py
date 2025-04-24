@@ -1,6 +1,7 @@
 """Account manager module """
 from datetime import datetime, timezone
 from uc3m_money.account_management_exception import AccountManagementException
+from uc3m_money.storage.deposit_json_store import DepositJsonStore
 from uc3m_money.storage.json_store import JsonStore
 
 from uc3m_money.transfer_request import TransferRequest
@@ -52,12 +53,16 @@ class AccountManager:
         """manages the deposits received for accounts"""
         deposit_obj = AccountDeposit.create_new_deposit_from_file(input_file)
 
+        #Check if iban is correct
         Iban(deposit_obj.to_iban)
+        #Check if amount is correct
         DepositAmount(deposit_obj.deposit_amount)
-
-        JsonStore.save_deposit(deposit_obj)
+        #Add the deposit to the json file
+        deposit_store = DepositJsonStore()
+        deposit_store.add_item(deposit_obj)
+        deposit_store.save_list_to_file()
+        #Return the deposit signature
         return deposit_obj.deposit_signature
-
 
     def calculate_balance(self, iban:str)->bool:
         """calculate the balance for a given iban"""

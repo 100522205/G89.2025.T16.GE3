@@ -8,7 +8,7 @@ class TransferRequestJsonStore(JsonStore):
         self._file_name = TRANSFERS_STORE_FILE
 
     def save_transfer_request(self, my_request):
-        self.load_list_from_file()
+        self.load_list_from_file(fnf_error=False)
         if self.find_item(key="transfer_code", value=my_request.transfer_code):
             raise AccountManagementException("Duplicated transfer in transfer list")
         self.add_item(my_request)

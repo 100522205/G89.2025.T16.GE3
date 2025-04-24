@@ -26,16 +26,18 @@ class JsonStore:
             raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from exception
 
 
-    def load_list_from_file(self):
+    def load_list_from_file(self, fnf_error):
         """general method of loading a JSON"""
         try:
             with open(self._file_name, "r", encoding="utf-8", newline="") as file:
                 self._data_list = json.load(file)
-        except FileNotFoundError:
+        except FileNotFoundError as fnf:
+            if fnf_error is True:
+                raise AccountManagementException("Error: file input not found") from fnf
             self._data_list = []
         except json.JSONDecodeError as exception:
             raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from exception
-
+        return self._data_list
 
     def add_item(self, item):
         """general method of adding new data to a data tuple"""
@@ -48,26 +50,6 @@ class JsonStore:
             if instance[key] == value:
                 return True
         return False
-
-
-    @staticmethod
-    def save_deposit(deposit_obj):
-        try:
-            with open(DEPOSITS_STORE_FILE, "r", encoding="utf-8", newline="") as file:
-                deposit_load = json.load(file)
-        except FileNotFoundError:
-            deposit_load = []
-        except json.JSONDecodeError as exception:
-            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from exception
-        deposit_load.append(deposit_obj.to_json())
-        try:
-            with open(DEPOSITS_STORE_FILE, "w", encoding="utf-8", newline="") as file:
-                json.dump(deposit_load, file, indent=2)
-        except FileNotFoundError as exception:
-            raise AccountManagementException("Wrong file  or file path") from exception
-        except json.JSONDecodeError as exception:
-            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from exception
-
 
     def save_balance(last_balance):
         try:
