@@ -1,0 +1,27 @@
+Name                                                 Stmts   Miss Branch BrPart  Cover
+--------------------------------------------------------------------------------------
+__init__.py                                              0      0      0      0   100%
+uc3m_money\__init__.py                                   5      0      0      0   100%
+uc3m_money\account_balance.py                           26      0      6      0   100%
+uc3m_money\account_deposit.py                           48      4      0      0    92%
+uc3m_money\account_management_config.py                  7      0      0      0   100%
+uc3m_money\account_management_exception.py              10      1      0      0    90%
+uc3m_money\account_manager.py                           44      0      2      0   100%
+uc3m_money\attributes\__init__.py                        0      0      0      0   100%
+uc3m_money\attributes\attribute_concept.py               9      0      0      0   100%
+uc3m_money\attributes\attribute_deposit_amount.py       14      0      2      0   100%
+uc3m_money\attributes\attribute_iban.py                 25      0      2      0   100%
+uc3m_money\attributes\attribute_transfer_amount.py      14      0      2      0   100%
+uc3m_money\attributes\attribute_transfer_date.py        20      0      4      0   100%
+uc3m_money\attributes\attribute_transfer_type.py         9      0      0      0   100%
+uc3m_money\attributes\attributes.py                     31      6      2      0    82%
+uc3m_money\storage\__init__.py                           0      0      0      0   100%
+uc3m_money\storage\account_balance_json_store.py        16      2      2      0    89%
+uc3m_money\storage\deposit_json_store.py                16      0      2      0   100%
+uc3m_money\storage\input_deposit_json_store.py           5      0      0      0   100%
+uc3m_money\storage\json_store.py                        32      4      6      0    89%
+uc3m_money\storage\transactions_json_store.py            6      0      0      0   100%
+uc3m_money\storage\transfer_request_json_store.py       19      0      4      0   100%
+uc3m_money\transfer_request.py                          59     13      0      0    78%
+--------------------------------------------------------------------------------------
+TOTAL                                                  415     30     34      0    93%

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="test_singleton_balance_store_tests.MyTestCase-20250425221023" tests="1" file="test_singleton_balance_store_tests.py" time="0.001" timestamp="2025-04-25T22:10:24" failures="0" errors="0" skipped="0">
+	<testcase classname="test_singleton_balance_store_tests.MyTestCase" name="test_singleton_balance_store_tests" time="0.001" timestamp="2025-04-25T22:10:24"/>
+</testsuite>

@@ -113,6 +113,7 @@ class TestTransferRequestTest(TestCase):
                             hash_new = ""
                         self.assertEqual(hash_new, hash_original)
 
+    # pylint: disable=no-member
     @freeze_time("2025/03/22 13:00:00")
     def test_duplicated_transfer_test(self):
         """tets methdo for duplicated transfer"""
