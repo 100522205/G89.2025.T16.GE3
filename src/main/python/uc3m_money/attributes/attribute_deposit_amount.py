@@ -1,13 +1,17 @@
+"""attribute_deposit_amount module"""
 from uc3m_money.attributes.attributes import Attribute
 from uc3m_money.account_management_exception import AccountManagementException
 
 
 class DepositAmount(Attribute):
+    """deposit amount validation class"""
     def __init__(self, attr_value):
+        super().__init__()
         self._error_message = "Error - Invalid deposit amount"
         self._validation_pattern = r"^EUR [0-9]{4}\.[0-9]{2}"
         self._attr_value = self._validate(attr_value)
 
+    # pylint:disable=arguments-renamed
     def _validate(self, attr_value: str)->float:
         """method for validating deposit amount"""
         super()._validate(attr_value)

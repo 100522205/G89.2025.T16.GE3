@@ -1,3 +1,4 @@
+"""test_singleton_balance_store_tests"""
 import unittest
 
 from uc3m_money.storage.account_balance_json_store import AccountBalanceJsonStore
@@ -5,7 +6,9 @@ from uc3m_money.storage.json_store import JsonStore
 
 
 class MyTestCase(unittest.TestCase):
+    """test class for balance store singleton"""
     def test_singleton_balance_store_tests(self):
+        """tests method"""
 
 
         balance_store_1 = AccountBalanceJsonStore()

@@ -33,6 +33,7 @@ class TestDepositIntoAccountTests(TestCase):
 
     @freeze_time("2025/03/26 14:00:00")
     #pylint: disable=too-many-locals
+    # pylint:disable=no-member
     def test_parametrized_cases(self):
         """Parametrized cases read from testingCases_RF2.csv
         time is set to 01/07/2024 since it is the chosen for the valid case"""

@@ -57,7 +57,7 @@ class TestTransferRequestTest(TestCase):
                 valid = row["VALID"]
                 transfer_date = row["date"]
                 transfer_concept = row["concept"]
-
+                #pylint:disable=no-member
                 if valid == "VALID":
                     with self.subTest(test_id + valid):
                         value = manager.transfer_request(from_iban=iban_from,

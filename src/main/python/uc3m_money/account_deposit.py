@@ -65,6 +65,7 @@ class AccountDeposit():
 
     @classmethod
     def create_new_deposit_from_file(cls, input_file):
+        """method for creating a new deposit recieved from a file for function 2"""
         new_deposit = InputDepositJsonStore(input_file)
         input_deposit = new_deposit.load_list_from_file(fnf_error=True)
         try:

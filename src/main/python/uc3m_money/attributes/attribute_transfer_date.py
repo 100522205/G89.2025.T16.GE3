@@ -1,14 +1,19 @@
+"""attribute_transfer_date module"""
+from datetime import datetime, timezone
+
 from uc3m_money.attributes.attributes import Attribute
 from uc3m_money.account_management_exception import AccountManagementException
-from datetime import datetime, timezone
 
 
 class TransferDate(Attribute):
+    """transfer date validation class"""
     def __init__(self, attr_value):
+        super().__init__()
         self._error_message = "Invalid date format"
         self._validation_pattern = r"^(([0-2]\d|3[0-1])\/(0\d|1[0-2])\/\d\d\d\d)$"
         self._attr_value =self._validate(attr_value)
 
+    # pylint:disable=arguments-renamed
     def _validate(self, attr_value:str)->str:
         """validates the arrival date format  using regex"""
         super()._validate(attr_value)

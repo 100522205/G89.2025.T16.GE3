@@ -1,13 +1,17 @@
+"""attribute_iban module"""
 from uc3m_money.attributes.attributes import Attribute
 from uc3m_money.account_management_exception import AccountManagementException
 
 
 class Iban(Attribute):
+    """iban validation class"""
     def __init__(self, attr_value):
+        super().__init__()
         self._error_message = "Invalid IBAN format"
         self._validation_pattern = r"^ES[0-9]{22}"
         self._attr_value =self._validate(attr_value)
 
+    # pylint:disable=arguments-renamed
     def _validate(self, attr_value:str)->str:
         """
     Calcula el dígito de control de un IBAN español.

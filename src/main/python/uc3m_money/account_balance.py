@@ -1,15 +1,19 @@
+"""Module for defining the class for function 3"""
 from datetime import datetime, timezone
 from uc3m_money.storage.transactions_json_store import TransactionsJsonStore
 from uc3m_money.account_management_exception import AccountManagementException
 from uc3m_money.attributes.attribute_iban import Iban
 
 class AccountBalance:
+    """Class for the functionalities needed for function 3"""
     def __init__(self, iban, balance, timestamp):
+        """innit method"""
         self._iban = iban
         self._balance = balance
         self._timestamp = timestamp
 
     def to_json(self):
+        """Set json structure with the information of an iban"""
         return {
             "IBAN": self._iban,
             "time": self._timestamp,
@@ -18,6 +22,7 @@ class AccountBalance:
 
     @classmethod
     def create_from_transactions(cls, iban):
+        """method docstring"""
         Iban(iban)
 
         store = TransactionsJsonStore()

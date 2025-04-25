@@ -1,3 +1,4 @@
+"""setup module"""
 #!/usr/bin/env python
 #   -*- coding: utf-8 -*-
 #
@@ -33,6 +34,7 @@ import glob
 import shutil
 
 from sys import version_info
+#pylint:disable=redefined-builtin
 py3 = version_info[0] == 3
 py2 = not py3
 if py2:
@@ -40,11 +42,12 @@ if py2:
 
 
 def install_pyb():
+    """install_pyb method"""
     try:
         subprocess.check_call([sys.executable, "-m", "pip", "install", "pybuilder"])
     except subprocess.CalledProcessError as e:
         sys.exit(e.returncode)
-
+#pylint:disable=invalid-name
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
 exit_code = 0
@@ -68,6 +71,7 @@ try:
     if main("-v", "-X", "-o", "--reset-plugins", "clean", "package"):
         raise RuntimeError("PyBuilder build failed")
 
+    # pylint:disable=invalid-name
     from pybuilder.reactor import Reactor
     reactor = Reactor.current_instance()
     project = reactor.project

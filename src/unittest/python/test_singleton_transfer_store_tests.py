@@ -1,10 +1,13 @@
+"""test_singleton_transfer_store_tests"""
 import unittest
 
 from uc3m_money.storage.transfer_request_json_store import TransferRequestJsonStore
 from uc3m_money.storage.json_store import JsonStore
 
 class MyTestCase(unittest.TestCase):
+    """test class for balance store singleton"""
     def test_singleton_transfer_store(self):
+        """tests method"""
 
 
         transfer_store_1 = TransferRequestJsonStore()

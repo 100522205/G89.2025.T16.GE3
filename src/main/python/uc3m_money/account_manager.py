@@ -15,13 +15,17 @@ from uc3m_money.attributes.attribute_deposit_amount import DepositAmount
 from uc3m_money.storage.transfer_request_json_store import TransferRequestJsonStore
 
 
+#pylint:disable=too-few-public-methods
 class AccountManager:
+    """Main class of this project"""
+    #pylint:disable=invalid-name
     class __AccountManager:
         """Class for providing the methods for managing the orders"""
         def __init__(self):
             pass
 
         #pylint: disable=too-many-arguments
+        #pylint: disable=too-many-positional-arguments
         def transfer_request(self, from_iban: str,
                              to_iban: str,
                              concept: str,
@@ -44,6 +48,7 @@ class AccountManager:
                                          transfer_date=date,
                                          transfer_amount=amount)
 
+            #pylint:disable=no-member
             at = TransferRequestJsonStore()
             at.save_transfer_request(my_request)
 
@@ -56,6 +61,7 @@ class AccountManager:
             #Check if iban is correct
             Iban(deposit_obj.to_iban)
             #Check if amount is correct
+            # pylint:disable=no-member
             DepositAmount(deposit_obj.deposit_amount)
             #Add the deposit to the json file
             DepositJsonStore().store_deposit(deposit_obj)
@@ -64,6 +70,7 @@ class AccountManager:
 
         def calculate_balance(self, iban:str)->bool:
             """calculate the balance for a given iban"""
+            # pylint:disable=protected-access
             balance_obj = AccountBalance.create_from_transactions(iban)
 
             store = AccountBalanceJsonStore()

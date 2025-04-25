@@ -36,6 +36,7 @@ class TestCalculateBalance(TestCase):
             raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from exception
         return data
 
+    # pylint:disable=no-member
     @freeze_time("2025/03/26 14:00:00")
     def test_calculate_balance_1 (self):
         """path 1: all ok - entering the loop"""
